@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web GIS Application</title>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="css/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Custom Notification Modal -->
+<div id="notificationOverlay">
+    <div class="notification-modal" id="notificationModal">
+        <div class="notification-title" id="notificationTitle">Notification</div>
+        <div class="notification-message" id="notificationMessage"></div>
+        <div class="notification-buttons" id="notificationButtons">
+            <button class="btn-primary" onclick="closeNotification()">OK</button>
+        </div>
+    </div>
+</div>
+
+<div id="sidebar">
+
+            <h2>THEMATIC MAPPING</h2>
+
+            <label id="uploadLabel" for="shpUpload" class="upload-label">
+            <span style="font-size:15px; font-weight:bold;">Add Data</span>
+            <span class="tooltip-text">Zipped Shapefile or GeoJSON</span>
+            </label>
+            <input type="file" id="shpUpload" accept=".zip,.geojson,.json" style="display:none;">
+
+            <div id="layerControl" style="margin-top:10px;">
+                <div style="color:#fdfeff;font-size:13px;margin-bottom:3px;"><span style="font-size: 16px; font-weight:bold;">Layer List</span> </div>
+                <ul id="layerList" style="list-style:none;padding-left:0;margin:0;color:#d1d5db;"></ul>
+            </div>
+
+            <div id="editorControls" style="margin-top:12px;color:#d1d5db;">
+                <div id="attributeEditor" style="margin-bottom:8px;"> </div>
+                <!-- Geometry edit buttons removed. Feature editing opens via clicking a feature. -->
+            </div>
+
+            <label for="activeLayerSelect" style="margin-top:8px;display:block;color:#ffffff;">Active Layer</label>
+            <select id="activeLayerSelect" onchange="setActiveLayer(this.value)">
+                <option value="">Select a Layer</option>
+            </select>
+
+            <div class="thematic-controls">  
+                <label for="thematicField" style="margin-top:8px;display:block;color:#fafafa;">Thematic Field</label>
+                <select id="thematicField">
+                    <option value="">Select a field</option>
+                </select>
+
+                <label for="thematicColorScheme" style="margin-top:8px;display:block;color:#ffffff;">Color Scheme</label>
+                <select id="thematicColorScheme">
+                    <option value="blues">Blues</option>
+                    <option value="greens">Greens</option>
+                    <option value="reds">Reds</option>
+                    <option value="purples">Purples</option>
+                    <option value="viridis">Viridis</option>
+                    <option value="rainbow">Rainbow</option>
+                    <option value="grayscale">Grayscale</option>
+                </select>
+
+                <label for="choroplethType" style="margin-top:8px;display:block;color:#ffffff;">Map Type</label>
+                <select id="choroplethType">
+                    <option value="thematic">Thematic</option>
+                    <option value="bivariate">Bivariate</option>
+                </select>
+
+                <label for="choroplethFields" style="margin-top:8px;display:block;color:#fdfdfd;">Bivariate fields</label>
+                <div class="field-pair-row">
+                    <select id="choroplethFieldX" class="field-pair-select">
+                        <option value="">X field</option>
+                    </select>
+                    <select id="choroplethFieldY" class="field-pair-select">
+                        <option value="">Y field</option>
+                    </select>
+                </div> 
+
+                <button onclick="applyThematic()">Apply Thematic</button>
+                <button id="popupToggle" class="sidebar-toggle" onclick="togglePopupSettings()">Configure Popup</button>
+                <div id="popupSettingsPanel" class="sidebar-panel collapsed">
+                    <select id="popupFields" multiple style="height:90px"></select>
+                    <button onclick="applyPopupSettings()">Apply Popup Settings</button>
+                </div>
+            </div>
+            <div class="export-controls">
+                <button onclick="exportExcel()">Export as Excel</button>
+                <button onclick="exportGeoJSON()">Export as GeoJSON</button>
+                <button onclick="exportPDFMap()">Export as PDF</button>
+            </div>
+            
+
+            <h5 style="color: #ffffff; font-size:16px;">Select a Base Map</h5>
+            <select id="basemapSelector" onchange="changeBasemap()">
+                <option value="osm">OpenStreetMap</option>
+                <option value="satellite" selected>Satellite</option>
+                <option value="topo">Topographic</option>
+            </select>
+
+            <div class="coordinate-display">
+                <p style="font-size: 16px; color:white">Get the Coordinates</p>
+                <div id="coordinates"><p class="coordinateplaceholder">Click on map to view the coordinates</p></div>
+            </div>
+        </div>
+
+        <div id="mapExportArea">
+            <div id="pageLayout">
+                <div id="pageHeader">
+                    <div>
+                        <div id="layoutTitle" contenteditable="true" spellcheck="false">Map Layouttt</div>
+                    </div>
+                </div>
+                <div id="pageBody">
+                    <div id="mapFrame">
+                        <div id="map"></div>
+                        <div id="mapNorthArrow">N</div>
+                        <div id="featureEditPanel" class="feature-edit-panel hidden">
+                            <div class="feature-edit-header">
+                                <div>Feature Editor</div>
+                                <button id="closeFeatureEdit" title="Close">✕</button>
+                            </div>
+                            <div id="featureEditPanelContent" class="feature-edit-content"></div>
+                            <div class="style-controls">
+                                <label for="styleStrokeColor" style="display:block;color:#fcfcfc;margin-bottom:1px;font-weight:100;">Stroke Color</label>
+                                <input id="styleStrokeColor" type="color" value="#ff6f00" style="width:80%;height:30px;margin-bottom:3px;border:none;border-radius:4px;" />
+                                <label for="styleFillColor" style="display:block;color:#fefefe;margin-bottom:1px;font-weight:100;">Fill Color</label>
+                                <input id="styleFillColor" type="color" value="#b91c1c" style="width:80%;height:30px;margin-bottom:3px;border:none;border-radius:4px;" />
+                                <p> </p>
+                                <button onclick="applyStyleToSelectedFeature()" style="width:82%;padding:5px;border-radius:6px;border:none;background:#2563eb;color:white;cursor:pointer; font-size:14px">Apply Style</button>
+                            </div>
+                            <div style="padding:8px;border-top:1px solid rgba(0,0,0,0.06);">
+                                <button id="saveFeatureEditsBtn" style="width:57%;padding:5px;border-radius:6px;border:none;margin-bottom:8px; margin-top:8px;
+                                background:#2563eb;color:white;cursor:pointer; font-size:14px">Save Edits</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="layoutRightPanel">
+                        <div class="statistics-panel">
+                            <div class="statistics-header">Map Statistics</div>
+                            <select id="statisticsField" onchange="updateMapStatistics()" style="width: 100%; margin-bottom: 12px; padding: 8px; border: 1px solid #292a2b; border-radius: 4px; font-size: 12px;">
+                                <option value="">-- Select field --</option>
+                            </select>
+                            <div id="statisticsContent" class="statistics-content">
+                                <p style="color: #9ca3af; font-size: 12px;">Select a field to view statistics</p>
+                            </div>
+                        </div>
+                        <div class="legend-panel">
+                            <div class="legend-header">Legend</div>
+                            <div id="legend" class="map-legend"></div>
+                        </div>
+                        <div class="notes-panel">
+                            <div class="notes-header">Notes</div>
+                            <textarea id="layoutNotes" placeholder="Write about your map, data, source of data, author, credits and more here."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Libraries -->
+<script src="js/leaflet.js"></script>
+<script src="js/leaflet.draw.js"></script>
+<script src="js/turf.min.js"></script>
+<script src="js/shp.min.js"></script>
+<script src="js/xlsx.full.min.js"></script>
+<script src="js/html2pdf.bundle.min.js"></script>
+<script src="js/html2canvas.min.js"></script>    
+<script src="js/jspdf.umd.min.js"></script>
+<!-- Main JS -->
+<script src="js/script.js"></script>
+
+</body>
+</html>
