@@ -650,10 +650,12 @@ body {
     align-items: center;
     gap: 20px;
     border: 1px solid #3e3f41;
-    border-radius: 8px;
+    border-radius: 5px;
     padding: 12px;
     background: #f8fafc;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.85);
 }
+
 
 .legend-panel,
 .notes-panel {
@@ -730,10 +732,15 @@ body {
     min-height: 100%;
     background: #f8fafc;
     border: 1px solid #000000;
-    border-radius: 8px;
+    border-radius: 5px;
     position: relative;
     overflow: hidden;
     width: 100%;
+}
+#mapFrame {
+    border: 1px solid #000000;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.85);
+    z-index: 0;
 }
 
 @media (max-width: 1100px) {
@@ -767,6 +774,7 @@ body {
         width: 100%;
         flex-direction: column;
         align-items: center;
+        
     }
 
     .legend-panel,
@@ -810,6 +818,7 @@ body {
     width: 100%;
     height: 100%;
     min-height: 540px;
+    
 }
 
 /* Feature edit panel shown on the right side of the map */
@@ -922,6 +931,7 @@ body {
         padding: 0mm 6mm 0mm 8mm; /* more left padding to keep legend away from map */
         align-items: center;
         flex: none;
+        
     }
 
     /* Legend and notes should print without large shadows and fit the column */
@@ -1259,4 +1269,10 @@ label{
 .upload-label:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
+}
+.basemap-heading{
+    font-size: 5px;
+   
+    color: #111827;
+    margin-bottom: 6px;
 }

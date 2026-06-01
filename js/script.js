@@ -1343,7 +1343,7 @@ function buildPopupHtml(props) {
         fields = filteredKeys.length > 0 ? filteredKeys : allKeys;
     }
 
-    let html = '<div style="line-height:1.3;">';
+    let html = '<div style="line-height:1.5;">';
     fields.forEach(f => {
         const val = props && (props[f] !== undefined && props[f] !== null) ? props[f] : '';
         html += `<b>${f}</b>: ${val}<br>`;
@@ -2482,6 +2482,10 @@ function changeBasemap() {
 
     if (value === 'topo') {
         topo.addTo(map);
+    }
+
+    if (value === 'none') {
+        // No basemap - blank background
     }
 
 }

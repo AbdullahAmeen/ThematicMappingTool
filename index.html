@@ -96,8 +96,9 @@
             </div>
             
 
-            <h5 style="color: #ffffff; font-size:16px;">Select a Base Map</h5>
-            <select id="basemapSelector" onchange="changeBasemap()">
+            <h5 class="basemap-heading" style="font-size: 16px; color:white; margin-bottom:10px">Select a Base Map</h5>
+            <select id="basemapSelector" onchange="changeBasemap()" aria-label="Base map selector" title="Select base map">
+                <option value="none">None (Blank)</option>
                 <option value="osm">Open Street Map</option>
                 <option value="satellite" selected>Satellite</option>
                 <option value="topo">Topographic</option>
