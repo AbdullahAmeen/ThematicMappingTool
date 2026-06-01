@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#1f2937"/>
+  
+  <!-- Map grid -->
+  <g stroke="#60a5fa" stroke-width="2" fill="none" opacity="0.6">
+    <line x1="50" y1="100" x2="350" y2="100"/>
+    <line x1="50" y1="150" x2="350" y2="150"/>
+    <line x1="50" y1="200" x2="350" y2="200"/>
+    <line x1="50" y1="250" x2="350" y2="250"/>
+    <line x1="100" y1="50" x2="100" y2="350"/>
+    <line x1="150" y1="50" x2="150" y2="350"/>
+    <line x1="200" y1="50" x2="200" y2="350"/>
+    <line x1="250" y1="50" x2="250" y2="350"/>
+    <line x1="300" y1="50" x2="300" y2="350"/>
+  </g>
+  
+  <!-- Compass rose -->
+  <circle cx="330" cy="80" r="25" stroke="#fbbf24" stroke-width="2" fill="none"/>
+  <line x1="330" y1="55" x2="330" y2="70" stroke="#fbbf24" stroke-width="3"/>
+  <text x="330" y="105" font-size="16" fill="#fbbf24" text-anchor="middle" font-weight="bold">N</text>
+  
+  <!-- Data points (colored circles) -->
+  <circle cx="120" cy="140" r="12" fill="#ef4444" opacity="0.8"/>
+  <circle cx="200" cy="180" r="15" fill="#3b82f6" opacity="0.8"/>
+  <circle cx="280" cy="220" r="10" fill="#10b981" opacity="0.8"/>
+  <circle cx="160" cy="250" r="13" fill="#f59e0b" opacity="0.8"/>
+  <circle cx="320" cy="160" r="11" fill="#8b5cf6" opacity="0.8"/>
+  
+  <!-- Title -->
+  <text x="200" y="360" font-size="20" fill="#e5e7eb" text-anchor="middle" font-weight="bold">Thematic Mapping</text>
+</svg>
